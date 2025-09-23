@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import { AppContext } from '../App';
 import Papa from 'papaparse';
 
-function formatSec(sec: number) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+function formatHHMM(sec: number) {
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
 function getDetailedCSV(state) {
@@ -31,7 +31,7 @@ function getPerTaskCSV(state) {
       const cells = members.map(m => {
         const segs = state.records.filter(r => r.task === task && r.memberId === m.id);
         if (!segs.length) return '';
-        return segs.map(r => `${r.op}@${formatSec(Math.floor(r.startMs / 1000))}-${formatSec(Math.floor(r.endMs / 1000))}`).join(' | ');
+  return segs.map((r: any) => `${r.op}@${formatHHMM(Math.floor(r.startMs / 1000))}-${formatHHMM(Math.floor(r.endMs / 1000))}`).join(' | ');
       });
       return [task, ...cells];
     })
@@ -66,8 +66,8 @@ export default function EndPage() {
       <h1>Contest Ended</h1>
       <div>
         <strong>{contest.name}</strong><br />
-        Duration: {formatSec(Math.floor(contest.durationMs / 1000))}<br />
-        Actual Elapsed: {formatSec(Math.floor(elapsed / 1000))}<br />
+  Duration: {formatHHMM(Math.floor(contest.durationMs / 1000))}<br />
+  Actual Elapsed: {formatHHMM(Math.floor(elapsed / 1000))}<br />
         Members: {contest.members.map(m => m.name).join(', ')}<br />
         Tasks: {contest.tasks.length}
       </div>
