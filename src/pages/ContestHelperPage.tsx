@@ -32,6 +32,24 @@ export default function ContestHelperPage() {
 	// End contest if time runs out
 	useEffect(() => {
 		if (remaining <= 0 && !contest.endedAt) {
+			for(let i: number = 0; i < contest.members.length; i++){
+				const memberId = contest.members[i].id;
+				const active = state.active[memberId]!;
+				setState(s => ({
+					...s,
+					active: { ...s.active, [memberId]: null },
+					records: [
+						...s.records,
+						{
+							memberId,
+							task: active.task,
+							op: active.op,
+							startMs: active.startedAtOffsetMs,
+							endMs: runUp,
+						},
+					],
+				}));
+			}
 			setState(s => ({ ...s, contest: { ...s.contest!, endedAt: now } }));
 			navigate('/end');
 		}
